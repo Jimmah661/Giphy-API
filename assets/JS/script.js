@@ -28,25 +28,38 @@ $("#newGifForm").submit(function (e) {
 // command to run on the click of a gifSearch button
 // Specify $(document) to make sure that it picks up any newly generated buttons
 $(document).on('click', '.gifSearch', function () {
+
     // Assign the clicked buttons data-value to a new variable
     var searchTerm = 'q=' + $(this).attr("data-value");
+
     // Create the url and attach the searchTerm variable
     var giphyURL = "https://api.giphy.com/v1/gifs/search?api_key=oNteX533XbDTTVC9WHZbJ4oXFKeje40v&" + searchTerm + "&limit=10&offset=0&rating=PG-13&lang=en"
-    console.log(giphyURL)
+
     // Start AJAX call on Giphy API
     $.ajax({ url: giphyURL, method: "GET" }).then(function (response) {
+
         // Push response data into variable to reference easier
         var respData = response.data;
+        console.log(respData);
+
         // Empty any previous gifs from the div
         $('.gifDiv').empty();
+
         // Run loop through response data to pull out and append Gif in new image element
         for (i = 0; i < respData.length; i++) {
+
             // Push gif Url into variable
-            var sourceUrl = respData[i].images.fixed_height.url;
+            var staticUrl = respData[i].images.fixed_height_still.url;
+            var animateUrl = respData[i].images.fixed_height.url;
             // create new img tag
             var newImg = $('<img>');
+
             // Add source to new image
-            newImg.attr('src', sourceUrl)
+            newImg.attr('src', staticUrl);
+            newImg.attr('data-static', 'true')
+            newImg.attr('data-staticUrl', staticUrl);
+            newImg.attr('data-animateUrl', animateUrl);
+
             // Append gif to page
             $('.gifDiv').append(newImg);
         }
@@ -68,3 +81,17 @@ $('#gifSubmit').on('click', function () {
     }
 })
 
+$(document).on('click', 'img', function () {
+    if (($(this).attr('data-static')) === 'true') {
+        $(this).attr('src', $(this).attr('data-animateUrl'));
+        $(this).attr('data-static', 'false');
+    } else {
+        $(this).attr('src', $(this).attr('data-staticUrl'));
+        $(this).attr('data-static', 'true');
+    }
+})
+
+// newImg.attr('src', staticUrl);
+// newImg.attr('data-static', 'true')
+// newImg.attr('data-staticUrl', staticUrl);
+// newImg.attr('data-animateUrl', animateUrl);
