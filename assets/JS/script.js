@@ -16,6 +16,7 @@ var generateButtons = function () {
         $('#buttonList').append(newButton);
     }
 }
+
 //  First call to generate buttons on page load --- complete
 generateButtons();
 
@@ -24,6 +25,7 @@ $("#newGifForm").submit(function (e) {
     e.preventDefault();
 });
 
+// command to run on the click of a gifSearch button
 // Specify $(document) to make sure that it picks up any newly generated buttons
 $(document).on('click', '.gifSearch', function () {
     // Assign the clicked buttons data-value to a new variable
@@ -33,11 +35,19 @@ $(document).on('click', '.gifSearch', function () {
     console.log(giphyURL)
     // Start AJAX call on Giphy API
     $.ajax({ url: giphyURL, method: "GET" }).then(function (response) {
-
-        // Push response data into variable to reverence easier
+        // Push response data into variable to reference easier
         var respData = response.data;
-        //Console log the response
-        console.log(respData);
+        // Run loop through response data to pull out and append Gif in new image element
+        for (i = 0; i < respData.length; i++) {
+            // Push gif Url into variable
+            var sourceUrl = respData[i].images.fixed_height.url;
+            // create new img tag
+            var newImg = $('<img>');
+            // Add source to new image
+            newImg.attr('src', sourceUrl)
+            // Append gif to page
+            $('.gifDiv').append(newImg);
+        }
     })
 })
 
