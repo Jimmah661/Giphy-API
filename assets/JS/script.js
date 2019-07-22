@@ -54,14 +54,19 @@ $(document).on('click', '.gifSearch', function () {
             // create new img tag
             var newImg = $('<img>');
 
+
             // Add source to new image
             newImg.attr('src', staticUrl);
             newImg.attr('data-static', 'true')
             newImg.attr('data-staticUrl', staticUrl);
             newImg.attr('data-animateUrl', animateUrl);
-
+            newImg.addClass('col-sm-12');
+            var newImgDiv = $('<div>');
+            $(newImgDiv).addClass('col-sm-4');
+            $(newImgDiv).append(newImg);
+            $(newImgDiv).append("<p class='col-sm-6'>Rating: " + respData[i].rating);
             // Append gif to page
-            $('.gifDiv').append(newImg);
+            $('.gifDiv').append(newImgDiv);
         }
     })
 })
@@ -81,6 +86,7 @@ $('#gifSubmit').on('click', function () {
     }
 })
 
+// code to animate/freeze gifs
 $(document).on('click', 'img', function () {
     if (($(this).attr('data-static')) === 'true') {
         $(this).attr('src', $(this).attr('data-animateUrl'));
