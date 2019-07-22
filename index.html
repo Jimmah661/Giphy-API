@@ -16,8 +16,12 @@
 <body class="container">
     <!-- Store the list of buttons here -->
     <div class="row">
-        <div class="col-sm-12" id="buttonList">
-            <button class="gifSearch" data-value="sloth">Sloth</button>
+        <div class="col-sm-12">
+            <form id="newGifForm">
+                <input type="text" placeholder="New Button" name="newButton" id="newGif">
+                <input type="submit" value="New Button" id="gifSubmit">
+            </form>
+            <div id="buttonList"></div>
         </div>
     </div>
     <div class="row">
