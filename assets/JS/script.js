@@ -1,17 +1,17 @@
-var gifArray = ["Tangled", "Brave", "Hercules"]
+var topics = ["Tangled", "Brave", "Hercules"]
 
 // function to generate the buttons --- Complete
 var generateButtons = function () {
     // Clear button list to remove old buttons
     $('#buttonList').empty();
-    // Loop for gifArray length
-    for (i = 0; i < gifArray.length; i++) {
+    // Loop for topics length
+    for (i = 0; i < topics.length; i++) {
         // for each item in the array create a button
-        var newButton = $('<button>' + gifArray[i] + '</button>');
+        var newButton = $('<button>' + topics[i] + '</button>');
         // Add the gifSearch class to allow pushing the value into the API query
         newButton.addClass('gifSearch');
         // Create Value that will be pushed into the API
-        newButton.attr('data-value', gifArray[i].toLowerCase());
+        newButton.attr('data-value', topics[i].toLowerCase());
         // Append item to the buttonList Div
         $('#buttonList').append(newButton);
     }
@@ -37,6 +37,8 @@ $(document).on('click', '.gifSearch', function () {
     $.ajax({ url: giphyURL, method: "GET" }).then(function (response) {
         // Push response data into variable to reference easier
         var respData = response.data;
+        // Empty any previous gifs from the div
+        $('.gifDiv').empty();
         // Run loop through response data to pull out and append Gif in new image element
         for (i = 0; i < respData.length; i++) {
             // Push gif Url into variable
@@ -58,7 +60,9 @@ $('#gifSubmit').on('click', function () {
         // put that value into a variable
         var nbDV = ($('#newGif').val());
         // Push that variable into the string array
-        gifArray.push(nbDV);
+        topics.push(nbDV);
+        // Clear input field
+        $('#newGif').val("");
         //regenerate the buttons
         generateButtons();
     }
