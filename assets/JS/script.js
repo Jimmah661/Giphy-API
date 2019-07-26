@@ -1,4 +1,5 @@
 var topics = ["Tangled", "Brave", "Hercules"]
+var favs = [];
 
 // function to generate the buttons --- Complete
 var generateButtons = function () {
@@ -9,7 +10,7 @@ var generateButtons = function () {
         // for each item in the array create a button
         var newButton = $('<button>' + topics[i] + '</button>');
         // Add the gifSearch class to allow pushing the value into the API query
-        newButton.addClass('gifSearch');
+        newButton.addClass('gifSearch mx-1 my-2 btn btn-secondary');
         // Create Value that will be pushed into the API
         newButton.attr('data-value', topics[i].toLowerCase());
         // Append item to the buttonList Div
@@ -20,14 +21,10 @@ var generateButtons = function () {
 //  First call to generate buttons on page load --- complete
 generateButtons();
 
-// Prevent submit button from refreshing page --- Complete
-$("#newGifForm").submit(function (e) {
-    e.preventDefault();
-});
-
 // command to run on the click of a gifSearch button
 // Specify $(document) to make sure that it picks up any newly generated buttons
-$(document).on('click', '.gifSearch', function () {
+$(document).on('click', '.gifSearch', function (event) {
+    event.preventDefault();
 
     // Assign the clicked buttons data-value to a new variable
     var searchTerm = 'q=' + $(this).attr("data-value");
@@ -51,28 +48,49 @@ $(document).on('click', '.gifSearch', function () {
             // Push gif Url into variable
             var staticUrl = respData[i].images.fixed_height_still.url;
             var animateUrl = respData[i].images.fixed_height.url;
+
+            // Create Div to hold outputted information
+            var newImgDiv = $('<div>');
+            $(newImgDiv).addClass('col-sm-6 col-md-4 mb-2');
+
+
             // create new img tag
             var newImg = $('<img>');
-
-
             // Add source to new image
             newImg.attr('src', staticUrl);
             newImg.attr('data-static', 'true')
             newImg.attr('data-staticUrl', staticUrl);
             newImg.attr('data-animateUrl', animateUrl);
+            newImg.attr('id', 'gif-' + i);
+            newImg.attr('value', 'Test');
             newImg.addClass('col-sm-12');
-            var newImgDiv = $('<div>');
-            $(newImgDiv).addClass('col-sm-4');
+
+            // Create Fav icon
+            var favIcon = $('<i class="fas fa-star col-sm-3 fav"></i>');
+            favIcon.attr('data-ID', 'gif-' + i);
+
+            //create copy icon
+            var copyIcon = $('<i class="fas fa-copy col-sm-3 copyIcon"></i>');
+            // Add clipboard copy info
+            copyIcon.attr('data-clipboard-text', animateUrl);
+
+
+            // Append Gif to div
             $(newImgDiv).append(newImg);
-            $(newImgDiv).append("<p class='col-sm-6'>Rating: " + respData[i].rating);
-            // Append gif to page
+            // Append rating to div
+            $(newImgDiv).append("<span class='col-sm-6'>Rating: " + respData[i].rating);
+            // Append Fav icon
+            $(newImgDiv).append(favIcon);
+            $(newImgDiv).append(copyIcon);
+            // Append div to page
             $('.gifDiv').append(newImgDiv);
         }
     })
 })
 
 // Code to create new search buttons --- Complete
-$('#gifSubmit').on('click', function () {
+$('#gifSubmit').on('click', function (event) {
+    event.preventDefault();
     // Check if there is a value in the text box
     if ($('#newGif').val()) {
         // put that value into a variable
@@ -97,7 +115,30 @@ $(document).on('click', 'img', function () {
     }
 })
 
-// newImg.attr('src', staticUrl);
-// newImg.attr('data-static', 'true')
-// newImg.attr('data-staticUrl', staticUrl);
-// newImg.attr('data-animateUrl', animateUrl);
+//On click functions for favouriting Gifs
+
+$(document).on('click', '.fav', function () {
+    var favID = $(this).attr('data-id');
+    console.log(favID);
+    $('#' + favID).attr()
+})
+
+// Onc click function to copy GIF link
+// Reference
+//var copyIcon = $('<i class="fas fa-copy col-sm-3 copy"></i>');
+// copyIcon.attr('data-ID', 'gif-' + i);
+
+// $(document).on('click', '.copyIcon', function () {
+//     var elId = $(this).attr('data-ID');
+//     console.log(elId);
+//     var URL = $('#' + elId).attr('data-animateUrl');
+//     console.log(URL);
+//     URL.select();
+//     document.execCommand("copy");
+// })
+
+// Clipboard intergration
+var clipboard = new ClipboardJS('.copyIcon');
+clipboard.on('success', function (e) {
+    console.log(e);
+});
