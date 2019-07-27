@@ -18,14 +18,22 @@
 
 <body class="container">
     <!-- Store the list of buttons here -->
+    <div class="jumbtron">
+        <h1>Giphy API Search page</h1>
+    </div>
     <div class="row">
-        <div class="col-sm-12 mb-4">
+        <div class="col-sm-8 mb-4">
             <form id="newGifForm">
-                <input type="text" placeholder="New Button" name="newButton" id="newGif">
-                <input type="submit" value="New Button" id="gifSubmit">
+                <input type="text" placeholder="Add a Disney movie" name="newButton" id="newGif">
+                <input class="btn btn-secondary" type="submit" value="Add Gif Search" id="gifSubmit">
             </form>
-            <div id="buttonList"></div>
         </div>
+        <div class="col-md-4">
+            <button class="btn btn-secondary" id="favorites">Favorites</button>
+        </div>
+    </div>
+    <div class="row">
+        <div id="buttonList"></div>
     </div>
     <div class="row gifDiv"></div>
     <script src="assets/JS/script.js"></script>

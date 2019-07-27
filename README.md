@@ -9,6 +9,8 @@ It then pulls the 10 most recent results and outputs those into separate <img> t
 
 Clicking on the image will then cause it to change the src element from the still image to the animated GIF.
 
+### Extra Functions
+
 There are also two extra buttons attached to each image, a heart and a copy button.
 
 The heart button will take the details of the selected gif and load it into an array that is contained in the local storage.

@@ -21,6 +21,10 @@ var generateButtons = function () {
 //  First call to generate buttons on page load --- complete
 generateButtons();
 
+if (localStorage.getItem('favsArray')) {
+    favs = JSON.parse(localStorage.getItem('favsArray'));
+};
+
 // command to run on the click of a gifSearch button
 // Specify $(document) to make sure that it picks up any newly generated buttons
 $(document).on('click', '.gifSearch', function (event) {
@@ -37,7 +41,6 @@ $(document).on('click', '.gifSearch', function (event) {
 
         // Push response data into variable to reference easier
         var respData = response.data;
-        console.log(respData);
 
         // Empty any previous gifs from the div
         $('.gifDiv').empty();
@@ -62,7 +65,6 @@ $(document).on('click', '.gifSearch', function (event) {
             newImg.attr('data-staticUrl', staticUrl);
             newImg.attr('data-animateUrl', animateUrl);
             newImg.attr('id', 'gif-' + i);
-            newImg.attr('value', 'Test');
             newImg.addClass('col-sm-12');
 
             // Create Fav icon
@@ -118,27 +120,31 @@ $(document).on('click', 'img', function () {
 //On click functions for favouriting Gifs
 
 $(document).on('click', '.fav', function () {
-    var favID = $(this).attr('data-id');
-    console.log(favID);
-    $('#' + favID).attr()
+    var favID = $('#' + ($(this).attr('data-id')));
+    favs.push([favID.attr("data-staticurl"), favID.attr("data-animateurl")]);
+    localStorage.setItem('favsArray', JSON.stringify($(favs)));
+    console.log($(favs))
+});
+
+$(document).on('click', '#favorites', function () {
+    $('.gifDiv').empty();
+    if (favs) {
+        for (i = 0; i < favs.length; i++) {
+            var newImgDiv = $('<div>');
+            $(newImgDiv).addClass('col-sm-6 col-md-4 mb-2');
+            var newImg = $('<img>');
+            // Add source to new image
+            newImg.attr('src', favs[i][0]);
+            newImg.attr('data-static', 'true')
+            newImg.attr('data-staticUrl', favs[i][0]);
+            newImg.attr('data-animateUrl', favs[i][1]);
+            newImg.attr('id', 'gif-' + i);
+            newImg.addClass('col-sm-12');
+            $(newImgDiv).append(newImg);
+            $('.gifDiv').append(newImgDiv);
+        }
+    }
 })
-
-// Onc click function to copy GIF link
-// Reference
-//var copyIcon = $('<i class="fas fa-copy col-sm-3 copy"></i>');
-// copyIcon.attr('data-ID', 'gif-' + i);
-
-// $(document).on('click', '.copyIcon', function () {
-//     var elId = $(this).attr('data-ID');
-//     console.log(elId);
-//     var URL = $('#' + elId).attr('data-animateUrl');
-//     console.log(URL);
-//     URL.select();
-//     document.execCommand("copy");
-// })
 
 // Clipboard intergration
 var clipboard = new ClipboardJS('.copyIcon');
-clipboard.on('success', function (e) {
-    console.log(e);
-});
