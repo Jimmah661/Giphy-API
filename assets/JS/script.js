@@ -18,6 +18,30 @@ var generateButtons = function () {
     }
 }
 
+// Function to populate the Favorites
+var writeFavs = function () {
+    $('.gifDiv').empty();
+    if (favs) {
+        for (i = 0; i < favs.length; i++) {
+            var newImgDiv = $('<div>');
+            $(newImgDiv).addClass('col-sm-6 col-md-4 mb-2');
+            var newImg = $('<img>');
+            // Add source to new image
+            newImg.attr('src', favs[i][0]);
+            newImg.attr('data-static', 'true')
+            newImg.attr('data-staticUrl', favs[i][0]);
+            newImg.attr('data-animateUrl', favs[i][1]);
+            newImg.attr('id', 'gif-' + i);
+            newImg.addClass('col-sm-12');
+            var removeButton = $('<button class="killMe col-sm-12">Remove</button>');
+            removeButton.attr('data-arrayID', i);
+            $(newImgDiv).append(newImg);
+            $(newImgDiv).append(removeButton);
+            $('.gifDiv').append(newImgDiv);
+        };
+    };
+};
+
 //  First call to generate buttons on page load --- complete
 generateButtons();
 
@@ -122,29 +146,21 @@ $(document).on('click', 'img', function () {
 $(document).on('click', '.fav', function () {
     var favID = $('#' + ($(this).attr('data-id')));
     favs.push([favID.attr("data-staticurl"), favID.attr("data-animateurl")]);
-    localStorage.setItem('favsArray', JSON.stringify($(favs)));
-    console.log($(favs))
+    localStorage.setItem('favsArray', JSON.stringify(favs));
 });
 
 $(document).on('click', '#favorites', function () {
-    $('.gifDiv').empty();
-    if (favs) {
-        for (i = 0; i < favs.length; i++) {
-            var newImgDiv = $('<div>');
-            $(newImgDiv).addClass('col-sm-6 col-md-4 mb-2');
-            var newImg = $('<img>');
-            // Add source to new image
-            newImg.attr('src', favs[i][0]);
-            newImg.attr('data-static', 'true')
-            newImg.attr('data-staticUrl', favs[i][0]);
-            newImg.attr('data-animateUrl', favs[i][1]);
-            newImg.attr('id', 'gif-' + i);
-            newImg.addClass('col-sm-12');
-            $(newImgDiv).append(newImg);
-            $('.gifDiv').append(newImgDiv);
-        }
-    }
-})
+    writeFavs();
+});
+
+$(document).on('click', '.killMe', function () {
+    console.log(favs);
+    var location = $(this).attr('data-arrayID');
+    favs.splice(location, 1);
+    console.log(favs);
+    localStorage.setItem('favsArray', JSON.stringify(favs));
+    writeFavs();
+});
 
 // Clipboard intergration
 var clipboard = new ClipboardJS('.copyIcon');
